@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf5geb0k8o2iy"]
+
+[ext_resource type="Script" path="res://current_project.gd" id="1_3uhm4"]
+
+[node name="CurrentProject" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3uhm4")
+
+[node name="SaveGameDialogue" type="FileDialog" parent="."]
+title = "Save Project"
+initial_position = 1
+size = Vector2i(500, 800)
+exclusive = false
+access = 2
+filters = PackedStringArray("*.json")
+use_native_dialog = true
+
+[connection signal="file_selected" from="SaveGameDialogue" to="." method="_on_save_game_dialogue_file_selected"]

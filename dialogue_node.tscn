@@ -1,9 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6ce6il4fmift"]
+[gd_scene load_steps=3 format=3 uid="uid://b6ce6il4fmift"]
 
 [ext_resource type="Script" path="res://dialogue_node.gd" id="1_5deuc"]
 [ext_resource type="Texture2D" uid="uid://ctyyd5pfkunvi" path="res://Images/Placeholder.png" id="1_bkowf"]
-[ext_resource type="Texture2D" uid="uid://c1dgnebfo2d3s" path="res://Images/PlaceholderPressed.png" id="3_2aj85"]
-[ext_resource type="Texture2D" uid="uid://cddfc7kqrvn6k" path="res://Images/PlaceholderHover.png" id="3_3lean"]
 
 [node name="DialogueNode" type="Control"]
 layout_mode = 3
@@ -36,10 +34,8 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 texture_normal = ExtResource("1_bkowf")
-texture_pressed = ExtResource("3_2aj85")
-texture_hover = ExtResource("3_3lean")
 ignore_texture_size = true
-stretch_mode = 0
+stretch_mode = 5
 
 [node name="CharacterNameEdit" type="TextEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)

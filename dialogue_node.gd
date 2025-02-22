@@ -4,10 +4,12 @@ signal mouse_inside
 
 @onready var file_diag : FileDialog = $FileDialog
 @onready var texture_btn : TextureButton = $VBoxContainer/TextureButton
+@onready var character_name_edit : TextEdit = $VBoxContainer/CharacterNameEdit
 
 var last_loc : Vector2
 var inside : bool = false
 var dragging : bool = false
+var node_name : String
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,7 +35,6 @@ func _on_texture_button_pressed() -> void:
 
 
 func _on_file_dialog_file_selected(path: String) -> void:
-	print(path)
 	var image := Image.load_from_file(path)
 	var texture := ImageTexture.create_from_image(image)
 	texture_btn.texture_normal = texture
@@ -47,3 +48,10 @@ func check_x() -> bool:
 
 func check_y() -> bool:
 	return get_global_mouse_position().y > position.y and get_global_mouse_position().y < position.y + size.y
+
+func set_params(path: String, character_name: String) -> void:
+	var image := Image.load_from_file(path)
+	var texture := ImageTexture.create_from_image(image)
+	texture_btn.texture_normal = texture
+	
+	character_name_edit.text = character_name

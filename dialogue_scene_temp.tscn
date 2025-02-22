@@ -1,7 +1,61 @@
-[gd_scene load_steps=4 format=3 uid="uid://bq75stooqptoa"]
+[gd_scene load_steps=4 format=3 uid="uid://c3u4s826ifpxv"]
 
-[ext_resource type="Script" path="res://dialogue_scene_temp.gd" id="1_4qjra"]
 [ext_resource type="Material" uid="uid://dj54j1hodo4vc" path="res://dialogue_scene_grid.tres" id="2_bsha8"]
+
+[sub_resource type="GDScript" id="GDScript_ptlvt"]
+script/source = "extends Control
+
+var dialogue_btn_array : Array[Control]
+var mouse_in_dialogue_node : Array[bool]
+var dialogue_button : PackedScene = preload(\"res://dialogue_node.tscn\")
+var current_dragging : int
+var mouse_position_offset : Vector2
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if Input.is_action_just_released(\"add\"):
+		var btn = dialogue_button.instantiate()
+		btn.custom_minimum_size.x = 50
+		btn.custom_minimum_size.y = 50
+		add_child(btn)
+		btn.position = get_global_mouse_position()
+		btn.mouse_inside.connect(_mouse_in_diaglogue_node)
+		mouse_in_dialogue_node.append(false)
+		dialogue_btn_array.append(btn)
+	
+	if Input.is_action_pressed(\"drag\"):
+		var iter = 0
+		for md in mouse_in_dialogue_node:
+			if md:
+				if not dialogue_btn_array[iter].dragging:
+					mouse_position_offset = get_global_mouse_position() - dialogue_btn_array[iter].position
+					dialogue_btn_array[iter].dragging = true
+					dialogue_btn_array[iter].position = lerp(dialogue_btn_array[iter].position - mouse_position_offset, get_global_mouse_position(), 0.5)
+					current_dragging = iter
+				else:
+					#dialogue_btn_array[iter].position = get_global_mouse_position()
+					dialogue_btn_array[iter].position = lerp(dialogue_btn_array[iter].position - mouse_position_offset, get_global_mouse_position(), 0.5)
+					current_dragging = iter
+				break
+			iter += 1
+	elif Input.is_action_just_released(\"drag\"):
+		if dialogue_btn_array.size() > 0:
+			dialogue_btn_array[current_dragging].dragging = false
+
+func _mouse_in_diaglogue_node(inside: bool, node_name: StringName) -> void:
+	print('mouse in ' + str(inside) + ' ' + node_name)
+	var iter = 0
+	for dn in dialogue_btn_array:
+		if dn.name == node_name:
+			mouse_in_dialogue_node[iter] = inside
+			break
+		iter += 1
+"
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_fsthf"]
 
@@ -12,7 +66,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_4qjra")
+script = SubResource("GDScript_ptlvt")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1

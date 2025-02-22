@@ -1,0 +1,83 @@
+[gd_scene load_steps=4 format=3 uid="uid://bjwjmmmyhrt85"]
+
+[ext_resource type="Script" path="res://new_character_screen.gd" id="1_2gj0x"]
+[ext_resource type="Texture2D" uid="uid://br22f62fi517a" path="res://Images/character_portrait_unset.png" id="2_kgt8u"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_duhbv"]
+bg_color = Color(0.151276, 0.151276, 0.151276, 1)
+
+[node name="NewCharacterScreen" type="Control"]
+layout_mode = 3
+anchor_right = 0.31
+anchor_bottom = 0.269
+offset_right = 0.799988
+offset_bottom = -0.52002
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2gj0x")
+default_portrait = ExtResource("2_kgt8u")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_duhbv")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(400, 600)
+ok_button_text = "Open"
+file_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 567.0
+offset_bottom = 258.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="CharacterPortrait" type="TextureRect" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_kgt8u")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AddCharacterPic" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select Character Image"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Character Name:"
+
+[node name="CharacterNameEdit" type="TextEdit" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Charater Name"
+
+[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Label3" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="AddBtn" type="Button" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Add Character"
+
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/AddCharacterPic" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/AddBtn" to="." method="_on_add_btn_pressed"]

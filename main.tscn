@@ -40,6 +40,18 @@ text = "Load Project"
 layout_mode = 2
 text = "Exit"
 
+[node name="OpenProjectDialogue" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(324, 180)
+exclusive = false
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json")
+use_native_dialog = true
+
 [connection signal="pressed" from="VBoxContainer/NewProjectBtn" to="." method="_on_new_project_btn_pressed"]
 [connection signal="pressed" from="VBoxContainer/LoadProjectBtn" to="." method="_on_load_project_btn_pressed"]
 [connection signal="pressed" from="VBoxContainer/ExitBtn" to="." method="_on_exit_btn_pressed"]
+[connection signal="file_selected" from="OpenProjectDialogue" to="." method="_on_open_project_dialogue_file_selected"]

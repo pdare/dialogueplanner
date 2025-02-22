@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dltdyrfdfs2e1"]
+[gd_scene load_steps=5 format=3 uid="uid://dltdyrfdfs2e1"]
 
 [ext_resource type="Script" path="res://dialogue_scene.gd" id="1_l34cn"]
 [ext_resource type="Material" uid="uid://dj54j1hodo4vc" path="res://dialogue_scene_grid.tres" id="2_80daa"]
+[ext_resource type="PackedScene" uid="uid://bjwjmmmyhrt85" path="res://new_character_screen.tscn" id="3_wscw6"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_78a6j"]
 
@@ -37,13 +38,13 @@ item_3/id = 2
 item_4/id = 5
 item_4/separator = true
 item_5/text = "Exit"
+item_5/id = 5
 
 [node name="Add" type="PopupMenu" parent="CanvasLayer/MenuBar"]
 title = "Add"
-item_count = 2
+item_count = 1
 item_0/text = "New Character"
 item_0/id = 1
-item_1/text = "New Dialogue Node"
 
 [node name="ExitUnsavedPopup" type="Window" parent="CanvasLayer"]
 initial_position = 1
@@ -79,6 +80,42 @@ size_flags_horizontal = 3
 text = "Exit
 "
 
+[node name="NewCharacterScreen" parent="CanvasLayer" instance=ExtResource("3_wscw6")]
+visible = false
+
+[node name="SceneName" type="Window" parent="CanvasLayer"]
+initial_position = 1
+size = Vector2i(300, 120)
+visible = false
+borderless = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneName"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneName/VBoxContainer"]
+layout_mode = 2
+text = "Enter Scene Name:"
+horizontal_alignment = 1
+
+[node name="SceneNameEdit" type="TextEdit" parent="CanvasLayer/SceneName/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Scene Name"
+
+[node name="AcceptBtn" type="Button" parent="CanvasLayer/SceneName/VBoxContainer"]
+layout_mode = 2
+text = "Accept
+"
+
 [connection signal="index_pressed" from="CanvasLayer/MenuBar/File" to="." method="_on_file_index_pressed"]
+[connection signal="index_pressed" from="CanvasLayer/MenuBar/Add" to="." method="_on_add_index_pressed"]
 [connection signal="pressed" from="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer/Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="CanvasLayer/SceneName/VBoxContainer/AcceptBtn" to="." method="_on_accept_btn_pressed"]
