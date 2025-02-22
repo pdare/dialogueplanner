@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://8pypovybpqdk"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_c3ks2"]
+[ext_resource type="PackedScene" uid="uid://dltdyrfdfs2e1" path="res://dialogue_scene.tscn" id="2_aukak"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c3ks2")
+new_proj = ExtResource("2_aukak")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 91.0
+offset_right = 437.0
+offset_bottom = 529.0
+
+[node name="NewProjectBtn" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "New Project"
+
+[node name="LoadProjectBtn" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Load Project"
+
+[node name="ExitBtn" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Exit"
+
+[connection signal="pressed" from="VBoxContainer/NewProjectBtn" to="." method="_on_new_project_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/LoadProjectBtn" to="." method="_on_load_project_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/ExitBtn" to="." method="_on_exit_btn_pressed"]

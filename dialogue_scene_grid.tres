@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dj54j1hodo4vc"]
+
+[ext_resource type="Shader" path="res://grid.gdshader" id="1_8pj0h"]
+
+[resource]
+shader = ExtResource("1_8pj0h")
+shader_parameter/u_gridSize = Vector2(100, 100)
+shader_parameter/u_lineColor = Color(0.715817, 0.514743, 0.498644, 1)
+shader_parameter/u_lineWidth = 0.04

@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://dltdyrfdfs2e1"]
+
+[ext_resource type="Script" path="res://dialogue_scene.gd" id="1_l34cn"]
+[ext_resource type="Material" uid="uid://dj54j1hodo4vc" path="res://dialogue_scene_grid.tres" id="2_80daa"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_78a6j"]
+
+[node name="DialogueScene" type="Node2D"]
+script = ExtResource("1_l34cn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_80daa")
+scale = Vector2(67418.1, 40000)
+texture = SubResource("CanvasTexture_78a6j")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+z_index = -2
+
+[node name="MenuBar" type="MenuBar" parent="CanvasLayer"]
+offset_right = 354.0
+offset_bottom = 30.0
+
+[node name="File" type="PopupMenu" parent="CanvasLayer/MenuBar"]
+item_count = 6
+item_0/text = "New Dialogue Scene+"
+item_0/id = 3
+item_1/id = 4
+item_1/separator = true
+item_2/text = "Save"
+item_2/id = 1
+item_3/text = "Save As"
+item_3/id = 2
+item_4/id = 5
+item_4/separator = true
+item_5/text = "Exit"
+
+[node name="Add" type="PopupMenu" parent="CanvasLayer/MenuBar"]
+title = "Add"
+item_count = 2
+item_0/text = "New Character"
+item_0/id = 1
+item_1/text = "New Dialogue Node"
+
+[node name="ExitUnsavedPopup" type="Window" parent="CanvasLayer"]
+initial_position = 1
+size = Vector2i(400, 150)
+visible = false
+borderless = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ExitUnsavedPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ExitUnsavedPopup/VBoxContainer"]
+layout_mode = 2
+text = "You have unsaved changes
+Are you sure you want to exit?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/ExitUnsavedPopup/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Save" type="Button" parent="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save & Exit"
+
+[node name="Exit" type="Button" parent="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Exit
+"
+
+[connection signal="index_pressed" from="CanvasLayer/MenuBar/File" to="." method="_on_file_index_pressed"]
+[connection signal="pressed" from="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="CanvasLayer/ExitUnsavedPopup/VBoxContainer/HBoxContainer/Exit" to="." method="_on_exit_pressed"]
