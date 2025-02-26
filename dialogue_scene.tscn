@@ -24,9 +24,10 @@ z_index = -2
 [node name="MenuBar" type="MenuBar" parent="CanvasLayer"]
 offset_right = 354.0
 offset_bottom = 30.0
+flat = true
 
 [node name="File" type="PopupMenu" parent="CanvasLayer/MenuBar"]
-item_count = 6
+item_count = 7
 item_0/text = "New Dialogue Scene+"
 item_0/id = 3
 item_1/id = 4
@@ -35,16 +36,21 @@ item_2/text = "Save"
 item_2/id = 1
 item_3/text = "Save As"
 item_3/id = 2
-item_4/id = 5
-item_4/separator = true
-item_5/text = "Exit"
+item_4/text = "Save & Exit"
+item_4/id = 6
 item_5/id = 5
+item_5/separator = true
+item_6/text = "Exit"
+item_6/id = 5
 
 [node name="Add" type="PopupMenu" parent="CanvasLayer/MenuBar"]
 title = "Add"
 item_count = 1
 item_0/text = "New Character"
 item_0/id = 1
+
+[node name="SceneList" type="PopupMenu" parent="CanvasLayer/MenuBar"]
+title = "Scene List"
 
 [node name="ExitUnsavedPopup" type="Window" parent="CanvasLayer"]
 initial_position = 1
@@ -113,6 +119,28 @@ placeholder_text = "Scene Name"
 layout_mode = 2
 text = "Accept
 "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SceneNameLbl" type="Label" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Current Scene"
+
+[node name="ProjectNameLbl" type="Label" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Current Project"
 
 [connection signal="index_pressed" from="CanvasLayer/MenuBar/File" to="." method="_on_file_index_pressed"]
 [connection signal="index_pressed" from="CanvasLayer/MenuBar/Add" to="." method="_on_add_index_pressed"]

@@ -9,10 +9,13 @@ extends Node2D
 @onready var menu_bar : MenuBar = $CanvasLayer/MenuBar
 @onready var file_btn : PopupMenu = $CanvasLayer/MenuBar/File
 @onready var add_btn : PopupMenu = $CanvasLayer/MenuBar/Add
+@onready var scenelist_btn : PopupMenu = $CanvasLayer/MenuBar/SceneList
 @onready var unsaved_exit : Window = $CanvasLayer/ExitUnsavedPopup
 @onready var add_character_screen : Control = $CanvasLayer/NewCharacterScreen
 @onready var scene_name_popup : Window = $CanvasLayer/SceneName
 @onready var scene_name_edit : TextEdit = $CanvasLayer/SceneName/VBoxContainer/SceneNameEdit
+@onready var scene_name_lbl : Label = $CanvasLayer/HBoxContainer/SceneNameLbl
+@onready var project_name_lbl : Label = $CanvasLayer/HBoxContainer/ProjectNameLbl
 
 # Camera Control vars
 var zoom_target : Vector2
@@ -47,24 +50,35 @@ func _ready() -> void:
 	if not CurrentProject.save_dict.is_empty():
 		for character in CurrentProject.characters:
 			empty_dialogue_node.add_item(character)
+		scene_name_lbl.text = 'Current scene: ' + CurrentProject.last_active_scene
+		project_name_lbl.text = 'Current project: ' + CurrentProject.project_name
+		scene_name = CurrentProject.last_active_scene
+		
+		for diag_node in CurrentProject.scenes_dict[scene_name]:
+			var btn = dialogue_button.instantiate()
+			print(diag_node)
+			
+			btn.custom_minimum_size.x = 50
+			btn.custom_minimum_size.y = 50
+			add_child(btn)
+			btn.position = Vector2(CurrentProject.scenes_dict[scene_name][diag_node]['Posx'], CurrentProject.scenes_dict[scene_name][diag_node]['Posy'])
+			btn.mouse_inside.connect(_mouse_in_diaglogue_node)
+			btn.set_params(CurrentProject.characters[CurrentProject.scenes_dict[scene_name][diag_node]['CharacterName']], CurrentProject.scenes_dict[scene_name][diag_node]['CharacterName'])
+			btn.node_name = diag_node
+			node_count += 1
+			mouse_in_dialogue_node.append(false)
+			dialogue_btn_array.append(btn)
+			unsaved_changes = true
+		scene_nodes_dict = CurrentProject.scenes_dict[scene_name]
 	else:
+		project_name_lbl.text = 'Current project: no projet name'
 		scene_name_popup.visible = true
 
 func _process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_DOWN):
 		print(camera.zoom)
 	if Input.is_action_just_released("add"):
-		var btn = dialogue_button.instantiate()
-		btn.custom_minimum_size.x = 50
-		btn.custom_minimum_size.y = 50
-		add_child(btn)
-		btn.position = get_global_mouse_position()
-		btn.mouse_inside.connect(_mouse_in_diaglogue_node)
-		btn.node_name = 'node' + str(node_count)
-		node_count += 1
-		mouse_in_dialogue_node.append(false)
-		dialogue_btn_array.append(btn)
-		unsaved_changes = true
+		create_dialogue_node('', true, true)
 	
 	if Input.is_action_pressed("drag"):
 		var iter = 0
@@ -84,8 +98,38 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_released("drag"):
 		if dialogue_btn_array.size() > 0:
 			dialogue_btn_array[current_dragging].dragging = false
+			var t_name = dialogue_btn_array[current_dragging].node_name
+			scene_nodes_dict[t_name]['Posx'] = dialogue_btn_array[current_dragging].position.x
+			scene_nodes_dict[t_name]['Posy'] = dialogue_btn_array[current_dragging].position.y
+
 	zoom(delta)
 	drag()
+
+func create_dialogue_node(character : String = '', is_empty : bool = true, is_r_click : bool = false) -> void:
+	var btn = dialogue_button.instantiate()
+	var temp_dict = {}
+	
+	btn.custom_minimum_size.x = 50
+	btn.custom_minimum_size.y = 50
+	add_child(btn)
+	if is_r_click:
+		btn.position = get_global_mouse_position()
+	else:
+		btn.position = camera.position
+	btn.mouse_inside.connect(_mouse_in_diaglogue_node)
+	if not is_empty:
+		btn.set_params(CurrentProject.characters[character], character)
+		temp_dict['CharacterName'] = character
+	else:
+		temp_dict['CharacterName'] = 'unset'
+	btn.node_name = 'node' + str(node_count)
+	node_count += 1
+	temp_dict['Posx'] = btn.position.x
+	temp_dict['Posy'] = btn.position.y
+	scene_nodes_dict[btn.node_name] = temp_dict
+	mouse_in_dialogue_node.append(false)
+	dialogue_btn_array.append(btn)
+	unsaved_changes = true
 
 func zoom(delta:float) -> void:
 	if Input.is_action_just_pressed("zoom_in") and zoom_target * 1.1 <= zoom_in_max:
@@ -119,7 +163,6 @@ func _mouse_in_diaglogue_node(inside: bool, node_name: StringName) -> void:
 		iter += 1
 		
 func save_exit() -> void:
-	print('changes saved')
 	CurrentProject.save_project()
 	get_tree().quit()
 
@@ -131,7 +174,7 @@ func _on_file_index_pressed(index: int) -> void:
 		else:
 			unsaved_exit.visible = true
 	elif file_btn.get_item_text(index) == "Save":
-		CurrentProject.scenes_dict[scene_name]
+		CurrentProject.scenes_dict[scene_name] = scene_nodes_dict
 		CurrentProject.save_project()
 		unsaved_changes = false
 
@@ -158,35 +201,17 @@ func _on_dialogue_submenu_pressed(index: int) -> void:
 	var btn_text = empty_dialogue_node.get_item_text(index)
 	
 	if btn_text == 'Empty Node':
-		var btn = dialogue_button.instantiate()
-		btn.custom_minimum_size.x = 50
-		btn.custom_minimum_size.y = 50
-		add_child(btn)
-		btn.position = camera.position
-		btn.mouse_inside.connect(_mouse_in_diaglogue_node)
-		btn.node_name = 'node' + str(node_count)
-		node_count += 1
-		mouse_in_dialogue_node.append(false)
-		dialogue_btn_array.append(btn)
-		unsaved_changes = true
+		create_dialogue_node()
 	else:
 		for character in CurrentProject.characters.keys():
 			if btn_text == character:
-				var btn = dialogue_button.instantiate()
-				btn.custom_minimum_size.x = 50
-				btn.custom_minimum_size.y = 50
-				add_child(btn)
-				btn.position = camera.position
-				btn.mouse_inside.connect(_mouse_in_diaglogue_node)
-				btn.set_params(CurrentProject.characters[character], character)
-				btn.node_name = 'node' + str(node_count)
-				node_count += 1
-				mouse_in_dialogue_node.append(false)
-				dialogue_btn_array.append(btn)
-				unsaved_changes = true
+				create_dialogue_node(character, false)
 				break
 
 
 func _on_accept_btn_pressed() -> void:
 	scene_name = scene_name_edit.text.strip_edges()
 	scene_name_popup.visible = false
+	scene_name_lbl.text = 'Current scene: ' + scene_name
+	CurrentProject.last_active_scene = scene_name
+	scenelist_btn.add_item(scene_name)
